@@ -246,6 +246,8 @@ router.post(
   "/getAmbulance",
   requestAmbulance
 );
+router.post("/editAmbulanceRequest", ambulanceController.editAmbulanceRequet)
+
 
 // admin gets all pending ambulance requests
 router.post("/pendingRequests", getPendingAmbulanceRequest);
