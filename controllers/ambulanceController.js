@@ -231,6 +231,22 @@ addNewAmbulance: async (req, res) => {
       res.status(500).json({ error: true, message: "Internal Server Error" });
     }
   },
+  editAmbulanceRequet: async (req, res) => {
+    const { status, request_time, request_id } = req.body;
+    const data = {
+      request_id: request_id,
+      request_time: request_time,
+      status: status,
+    };
+    try {
+      const response = await ambulance.editRequest(data);
+      console.log(response);
+      return res.status(200).json({ message: "Requested edited successfully" });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: true, message: "Internal Server Error" });
+    }
+  },
   getPendingAmbulanceRequest: async (req, res) => {
       const {request_status} = req.body;
   console.log(request_status);
