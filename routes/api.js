@@ -10,6 +10,7 @@ const appointmentController = require("../controllers/appointmentController");
 const doctorAuthController = require("../controllers/doctorAuthController");
 const ambulanceController = require("../controllers/ambulanceController");
 const authMiddleware = require("../middlewares/authMiddleware"); 
+const { userSignupRules, validate, signinRules, registerUserRules, verifyCodeRules } = require("../middlewares/validationMiddleware");
 
 const {
   requestAmbulance,
@@ -22,10 +23,10 @@ const {
   deleteAmbulance,
 } = require("../controllers/ambulanceController");
 
-router.post("/signin", authController.signin);
-router.post("/register", userController.register); 
-router.post("/signup", userController.onbording); 
-router.post("/verify", userController.verify);
+router.post("/signin", signinRules(), validate, authController.signin);
+router.post("/register", registerUserRules(), validate, userController.register); 
+router.post("/signup", userSignupRules(), validate, userController.onbording); 
+router.post("/verify",  verifyCodeRules(), validate, userController.verify);
 router.post("/resendCodePatient", userController.resendActivationCode); 
 router.post("/resendCodeDoctor", doctorAuthController.updateDoctorRegCode); 
 
