@@ -66,7 +66,7 @@ const handleAdminSignin = async (req, res) => {
     email: response[0].email,
     user_id: response[0].id,
   };
-  const token = jwt.sign(tokenData, config.jwtSecretKey, { expiresIn: "1d" });
+  const token = jwt.sign(tokenData, config.jwtAdminSecret, { expiresIn: "1d" });
   return res.status(200).json({ message: "Login Successful", token, userData });
 };
 
