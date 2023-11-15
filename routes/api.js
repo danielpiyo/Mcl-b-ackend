@@ -9,13 +9,19 @@ const serviceController = require("../controllers/servicesController");
 const appointmentController = require("../controllers/appointmentController");
 const doctorAuthController = require("../controllers/doctorAuthController");
 const ambulanceController = require("../controllers/ambulanceController");
-const authMiddleware = require("../middlewares/authMiddleware"); 
-const { userSignupRules, validate, signinRules, registerUserRules, verifyCodeRules } = require("../middlewares/validationMiddleware");
+const authMiddleware = require("../middlewares/authMiddleware");
+const {
+  userSignupRules,
+  validate,
+  signinRules,
+  registerUserRules,
+  verifyCodeRules,
+} = require("../middlewares/validationMiddleware");
 
 const {
   requestAmbulance,
   getPendingAmbulanceRequest,
-   getPendinConciergeRequest,
+  getPendinConciergeRequest,
   assignRequestToAmbulance,
   getAmbulancesQuery,
   ambulanceReview,
@@ -24,40 +30,89 @@ const {
 } = require("../controllers/ambulanceController");
 
 router.post("/signin", signinRules(), validate, authController.signin);
-router.post("/register", registerUserRules(), validate, userController.register); 
-router.post("/signup", userSignupRules(), validate, userController.onbording); 
-router.post("/verify",  verifyCodeRules(), validate, userController.verify);
-router.post("/resendCodePatient", userController.resendActivationCode); 
-router.post("/resendCodeDoctor", doctorAuthController.updateDoctorRegCode); 
+router.post(
+  "/register",
+  registerUserRules(),
+  validate,
+  userController.register
+);
+router.post("/signup", userSignupRules(), validate, userController.onbording);
+router.post("/verify", verifyCodeRules(), validate, userController.verify);
+router.post("/resendCodePatient", userController.resendActivationCode);
+router.post("/resendCodeDoctor", doctorAuthController.updateDoctorRegCode);
 
 router.post("/doctorSignin", doctorAuthController.signin);
-router.post("/doctorSinup", doctorAuthController.onbording); 
+router.post("/doctorSinup", doctorAuthController.onbording);
 router.post("/doctorVerify", doctorAuthController.verify);
 router.post("/doctorBasic", doctorAuthController.basicUpdate);
-router.post("/doctorAcademic", doctorController.updateDoctorQualification); 
-router.post("/allDoctors", doctorController.getAllDoctor); 
+router.post("/doctorAcademic", doctorController.updateDoctorQualification);
+router.post("/allDoctors", doctorController.getAllDoctor);
 router.post("/doctorExperince", doctorController.updateDoctorExperience);
-router.post("/doctorAvailability", authMiddleware.verifyToken, doctorController.updateDoctorAvailability);
-router.post("/checkDoctorAvailability", authMiddleware.verifyToken, doctorController.checkDoctorAvailability);
-router.post("/doctorUpdateProgress", authMiddleware.verifyToken, appointmentController.doctorupdateAppointmentProgress);
-router.post("/patientRateDoctor", authMiddleware.verifyToken, appointmentController.patientRateDoctorAppointment);
-router.post("/homeVisitSubscription", authMiddleware.verifyToken, ambulanceController.newHomeVisitSunscription);
-router.post("/ambulaceSubscription", authMiddleware.verifyToken, ambulanceController.newAmbulanceSunscription); 
-router.post("/patientSubscriptions", authMiddleware.verifyToken, ambulanceController.patientSubscriptions); 
-const { handleAdminSignin, handleAdminSignup, handleForgotPassword, clickEmail, postForm, getAllAdmins, getDoctorByEmail, getPatientByEmail } = require("../controllers/adminController");
+router.post(
+  "/doctorAvailability",
+  authMiddleware.verifyToken,
+  doctorController.updateDoctorAvailability
+);
+router.post(
+  "/checkDoctorAvailability",
+  authMiddleware.verifyToken,
+  doctorController.checkDoctorAvailability
+);
+router.post(
+  "/doctorUpdateProgress",
+  authMiddleware.verifyToken,
+  appointmentController.doctorupdateAppointmentProgress
+);
+router.post(
+  "/patientRateDoctor",
+  authMiddleware.verifyToken,
+  appointmentController.patientRateDoctorAppointment
+);
+router.post(
+  "/homeVisitSubscription",
+  authMiddleware.verifyToken,
+  ambulanceController.newHomeVisitSunscription
+);
+router.post(
+  "/ambulaceSubscription",
+  authMiddleware.verifyToken,
+  ambulanceController.newAmbulanceSunscription
+);
+router.post(
+  "/patientSubscriptions",
+  authMiddleware.verifyToken,
+  ambulanceController.patientSubscriptions
+);
+const {
+  handleAdminSignin,
+  handleAdminSignup,
+  handleForgotPassword,
+  clickEmail,
+  postForm,
+  getAllAdmins,
+  getDoctorByEmail,
+  getPatientByEmail,
+} = require("../controllers/adminController");
+const { verifyAdminToken } = require("../middlewares/adminAuthMiddleware");
 
 // Doctors Withdrawal
-router.post("/requestWithrawal", authMiddleware.verifyToken, doctorController.doctorRequestMoneyWithdrwal);  
-router.post("/myWithrawals", authMiddleware.verifyToken, doctorController.pullDoctorsWithdrawals); 
-
+router.post(
+  "/requestWithrawal",
+  authMiddleware.verifyToken,
+  doctorController.doctorRequestMoneyWithdrwal
+);
+router.post(
+  "/myWithrawals",
+  authMiddleware.verifyToken,
+  doctorController.pullDoctorsWithdrawals
+);
 
 //
 /**Location */
-router.get("/locations", locationController.locations);  
+router.get("/locations", locationController.locations);
 /**Specialities */
 router.get("/nurseSpecialities", locationController.nurseSpecialities);
 router.get("/clinicianSpecialities", locationController.clinicianSpecialities);
-
 
 router.post(
   "/requestAmbulanceOrCnciage",
@@ -65,13 +120,12 @@ router.post(
   ambulanceController.requestAmbulanceOrConciage
 );
 
-
 /**Doctors */
 router.post("/doctor", authMiddleware.verifyToken, doctorController.addDoctor);
 router.post(
   "/doctor/all",
   authMiddleware.verifyToken,
-  doctorController.getAllDoctor 
+  doctorController.getAllDoctor
 );
 
 /**get Nurses  */
@@ -120,21 +174,18 @@ router.post(
 
 router.post(
   "/raiseTicket",
- authMiddleware.verifyToken,
+  authMiddleware.verifyToken,
   appointmentController.raiseTicket
-); 
-router.post(
-  "/allAvailableTicket",
-  appointmentController.findAllTickets
 );
+router.post("/allAvailableTicket", appointmentController.findAllTickets);
 
 router.post(
   "/allOpen-closedTicket",
   appointmentController.findOpenCloseTickets
-); 
+);
 
 // create new admin
-router.post("/admin/create-admin", handleAdminSignup)
+router.post("/admin/create-admin", handleAdminSignup);
 // login in admin
 router.post("/admin/login", handleAdminSignin);
 // admin forgort password
@@ -200,76 +251,79 @@ router.post(
   doctorController.getDoctorsBalance
 );
 
-
 // patient pulling his prescription
 router.post(
   "/patient/prescriptions",
   authMiddleware.verifyToken,
-  appointmentController.getPatientsPrescription 
+  appointmentController.getPatientsPrescription
 );
 
 // Patient Reset Password
-router.post(
-  "/patient/resetCode", userController.updateUserRegCode
-);
-router.post(
-  "/patient/resetPassword", userController.resetUserPassword
-);
+router.post("/patient/resetCode", userController.updateUserRegCode);
+router.post("/patient/resetPassword", userController.resetUserPassword);
 
 // Doctor Reset Password
-router.post(
-  "/doctor/resetCode", doctorAuthController.updateDoctorRegCode
-);
-router.post("/doctor/query",doctorController.getDoctorQuery)
-router.post(
-  "/doctor/resetPassword", doctorAuthController.resetDoctorPassword
-);
+router.post("/doctor/resetCode", doctorAuthController.updateDoctorRegCode);
+router.post("/doctor/query", doctorController.getDoctorQuery);
+router.post("/doctor/resetPassword", doctorAuthController.resetDoctorPassword);
 // get all admins
-router.get("/admin/get-all-admins", getAllAdmins);
-
+router.get("/admin/get-all-admins", verifyAdminToken, getAllAdmins);
 
 // get doctor by email
-router.post("/admin/get-doctor-by-email", getDoctorByEmail);
+router.post("/admin/get-doctor-by-email", verifyAdminToken, getDoctorByEmail);
 // approve doctor application
-router.post("/admin/doctor-approval",doctorController.approveDoctorRequest) 
-// ...add other endpoints here... 
+router.post(
+  "/admin/doctor-approval",
+  verifyAdminToken,
+  doctorController.approveDoctorRequest
+);
+// ...add other endpoints here...
 // get patient by email
-router.post("/admin/get-patient-by-email", getPatientByEmail);
+router.post("/admin/get-patient-by-email", verifyAdminToken, getPatientByEmail);
 
-
-router.post("/add-ambulance", addNewAmbulance);
+router.post("/add-ambulance", verifyAdminToken, addNewAmbulance);
 
 // admin deletes an ambulance
-router.post("/delete-ambulance", deleteAmbulance);
+router.post("/delete-ambulance", verifyAdminToken, deleteAmbulance);
 
 // user makes request for an ambulance
-router.post(
-  "/getAmbulance",
-  requestAmbulance
-);
-router.post("/editAmbulanceRequest", ambulanceController.editAmbulanceRequet)
-
+router.post("/getAmbulance", requestAmbulance);
+router.post("/editAmbulanceRequest", ambulanceController.editAmbulanceRequet);
 
 // admin gets all pending ambulance requests
-router.post("/pendingRequests", getPendingAmbulanceRequest);
+router.post("/pendingRequests", verifyAdminToken, getPendingAmbulanceRequest);
 // admin gets all pending Medical concierge requests
 
-router.post("/admin/getAllTransactions", appointmentController.getAllTransactionsForAppointments);
-router.post("/admin/getAllWithdrawalRequest", doctorController.pullAllWithdrawalsRequest);
+router.post(
+  "/admin/getAllTransactions",
+  verifyAdminToken,
+  appointmentController.getAllTransactionsForAppointments
+);
+router.post(
+  "/admin/getAllWithdrawalRequest",
+  verifyAdminToken,
+  doctorController.pullAllWithdrawalsRequest
+);
 
 // Approve the withdrawal
-router.post("/admin/approveWithdrawalRequest", 
-  authMiddleware.verifyToken, doctorController.approveDoctorsWithdrawalsRequest);
+router.post(
+  "/admin/approveWithdrawalRequest",
+  authMiddleware.verifyToken,
+  verifyAdminToken,
+  doctorController.approveDoctorsWithdrawalsRequest
+);
 
-
-router.post("/pendingConciergeRequests", getPendinConciergeRequest);
-
+router.post(
+  "/pendingConciergeRequests",
+  verifyAdminToken,
+  getPendinConciergeRequest
+);
 
 // get free or inuse ambulnase
-router.get("/getAmbulanceQuery", getAmbulancesQuery);
+router.get("/getAmbulanceQuery", verifyAdminToken, getAmbulancesQuery);
 
 // admin assign request to an ambulance
-router.put("/assignAmbulance", assignRequestToAmbulance);
+router.put("/assignAmbulance", verifyAdminToken, assignRequestToAmbulance);
 
 router.post("/ambulance/rate", ambulanceReview);
 
@@ -278,7 +332,6 @@ router.post(
   "/payment/callback",
   appointmentController.makeTransactioForAppointment
 );
-
 
 // ...add other endpoints here...
 
