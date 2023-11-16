@@ -7,6 +7,7 @@ const {
   getAdminById,
   changeAdminPassword,
   getAdmins,
+  closeTicket,
 } = require("../models/admin");
 const { sendEmail } = require("../models/email");
 const { findDoctorByEmail } = require("../models/doctors");
@@ -226,6 +227,23 @@ const getPatientByEmail = async (req, res) => {
     return res.status(500).json({ message: "an error occurred" });
   }
 };
+const closeSupportTicket = async (req, res) => {
+  const { request_id } = req.body;
+  const data = {
+    status: "Closed",
+    id: request_id,
+  };
+  try {
+    const response = await closeTicket(data);
+    if (!response) {
+      return res.status(404).json({ message: "An error occurrd" });
+    }
+    return res.status(200).json({ message: "Successfully marked as Closed." });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "an error occurred" });
+  }
+};
 module.exports = {
   handleAdminSignin,
   handleAdminSignup,
@@ -235,4 +253,5 @@ module.exports = {
   getAllAdmins,
   getDoctorByEmail,
   getPatientByEmail,
+  closeSupportTicket,
 };

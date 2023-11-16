@@ -83,6 +83,21 @@ const getAdmins = () => {
     );
   });
 };
+const closeTicket = (data) => {
+  return new Promise((resolve, reject) => {
+    connAttrs.query(
+      "UPDATE support_tickets SET status = ? WHERE id = ?",
+      [data.status, data.id],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        }
+        resolve(result);
+      }
+    );
+  });
+};
 
 module.exports = {
   addNewAdmin,
@@ -90,4 +105,5 @@ module.exports = {
   getAdminById,
   changeAdminPassword,
   getAdmins,
+  closeTicket,
 };
