@@ -92,6 +92,7 @@ const {
   getAllAdmins,
   getDoctorByEmail,
   getPatientByEmail,
+  closeSupportTicket,
 } = require("../controllers/adminController");
 const { verifyAdminToken } = require("../middlewares/adminAuthMiddleware");
 
@@ -183,6 +184,7 @@ router.post(
   "/allOpen-closedTicket",
   appointmentController.findOpenCloseTickets
 );
+router.post("/closeTicket", authMiddleware.verifyToken, closeSupportTicket )
 
 // create new admin
 router.post("/admin/create-admin", handleAdminSignup);

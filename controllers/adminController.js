@@ -7,6 +7,7 @@ const {
   getAdminById,
   changeAdminPassword,
   getAdmins,
+  closeTicket,
 } = require("../models/admin");
 const { sendEmail } = require("../models/email");
 const { findDoctorByEmail } = require("../models/doctors");
@@ -25,6 +26,12 @@ const handleAdminSignup = async (req, res) => {
   };
 
   try {
+    const checkAdminExists = await loginAdmin(data);
+    if (checkAdminExists.length !== 0) {
+      return res
+        .status(400)
+        .json({ message: "An admin with the same email already exists" });
+    }
     const response = await addNewAdmin(data);
     console.log(response);
     if (response.length !== 0) {
@@ -92,7 +99,7 @@ const handleForgotPassword = async (req, res) => {
       config.jwtSecretKey,
       { expiresIn: "30m" }
     );
-    const link = `${process.env.SERVER_URL}/api/admin/reset?id=${user.id}&token=${token}`;
+    const link = `https://app.mclinic.co.ke:3000/api/admin/reset?id=${user.id}&token=${token}`;
     const content = `<p>Hello, ${user.name} </p>
     <p>We have received a request to reset your password. If you did not request this change, please disregard this email.</p>
     <p>To reset your password, please click the following link:</p>
@@ -220,6 +227,23 @@ const getPatientByEmail = async (req, res) => {
     return res.status(500).json({ message: "an error occurred" });
   }
 };
+const closeSupportTicket = async (req, res) => {
+  const { request_id } = req.body;
+  const data = {
+    status: "Closed",
+    id: request_id,
+  };
+  try {
+    const response = await closeTicket(data);
+    if (!response) {
+      return res.status(404).json({ message: "An error occurrd" });
+    }
+    return res.status(200).json({ message: "Successfully marked as Closed." });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "an error occurred" });
+  }
+};
 module.exports = {
   handleAdminSignin,
   handleAdminSignup,
@@ -229,4 +253,5 @@ module.exports = {
   getAllAdmins,
   getDoctorByEmail,
   getPatientByEmail,
+  closeSupportTicket,
 };

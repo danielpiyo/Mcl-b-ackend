@@ -6,26 +6,17 @@ const connAttrs = mysql.createConnection(config.connection);
 // login an admin
 const addNewAdmin = (data) => {
   return new Promise((resolve, reject) => {
-    connAttrs.query("SELECT email from admins", [], (err, result) => {
-      if (err) {
-        console.log(err);
-        reject(err);
-      }
-      if (result.length !== 0) {
-        reject(result);
-      }
-      connAttrs.query(
-        "INSERT INTO admins (name, email, username, password) VALUES (?,?,?,?)",
-        [data.name, data.email, data.username, data.password],
-        (err, result, fields) => {
-          if (err) {
-            console.log(err);
-            reject(err);
-          }
-          resolve(result);
+    connAttrs.query(
+      "INSERT INTO admins (name, email, username, password) VALUES (?,?,?,?)",
+      [data.name, data.email, data.username, data.password],
+      (err, result, fields) => {
+        if (err) {
+          console.log(err);
+          reject(err);
         }
-      );
-    });
+        resolve(result);
+      }
+    );
   });
 };
 
@@ -92,6 +83,21 @@ const getAdmins = () => {
     );
   });
 };
+const closeTicket = (data) => {
+  return new Promise((resolve, reject) => {
+    connAttrs.query(
+      "UPDATE support_tickets SET status = ? WHERE id = ?",
+      [data.status, data.id],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        }
+        resolve(result);
+      }
+    );
+  });
+};
 
 module.exports = {
   addNewAdmin,
@@ -99,4 +105,5 @@ module.exports = {
   getAdminById,
   changeAdminPassword,
   getAdmins,
+  closeTicket,
 };
