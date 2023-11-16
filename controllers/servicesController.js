@@ -104,6 +104,7 @@ module.exports = {
       cost,
       description,
       image_url,
+      id,
       updated_at: new Date(),
       };
 

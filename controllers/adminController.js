@@ -25,6 +25,12 @@ const handleAdminSignup = async (req, res) => {
   };
 
   try {
+    const checkAdminExists = await loginAdmin(data);
+    if (checkAdminExists.length !== 0) {
+      return res
+        .status(400)
+        .json({ message: "An admin with the same email already exists" });
+    }
     const response = await addNewAdmin(data);
     console.log(response);
     if (response.length !== 0) {
@@ -92,7 +98,7 @@ const handleForgotPassword = async (req, res) => {
       config.jwtSecretKey,
       { expiresIn: "30m" }
     );
-    const link = `${process.env.SERVER_URL}/api/admin/reset?id=${user.id}&token=${token}`;
+    const link = `https://app.mclinic.co.ke:3000/api/admin/reset?id=${user.id}&token=${token}`;
     const content = `<p>Hello, ${user.name} </p>
     <p>We have received a request to reset your password. If you did not request this change, please disregard this email.</p>
     <p>To reset your password, please click the following link:</p>
