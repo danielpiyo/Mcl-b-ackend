@@ -123,6 +123,22 @@ addAmbulannce: async (data) => {
       );
     });
   },
+  // edit an ambulace request
+  editRequest: async (data) => {
+    return new Promise((resolve, reject) => {
+      connAttrs.query(
+        "UPDATE  ambulance_requests SET request_status = ?, request_datetime= ? WHERE request_id = ?",
+        [data.status, data.request_time, data.request_id],
+        (err, resluts) => {
+          if (err) {
+            console.log(err);
+            return reject(err);
+          }
+          resolve(resluts);
+        }
+      );
+    });
+  },
   deleteAmbulance: async (ambulance_id) => {
     return new Promise((resolve, reject) => {
       connAttrs.query(
