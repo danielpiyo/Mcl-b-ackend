@@ -15,7 +15,7 @@ module.exports = {
           if (error) {
             return reject(error);
           }
-          resolve(result[0]);
+          resolve(result);
         }
       );
     });

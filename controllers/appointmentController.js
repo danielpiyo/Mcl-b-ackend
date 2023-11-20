@@ -225,9 +225,9 @@ module.exports = {
       const activeAppointment = await Appointment.findUserActiveAppointments(
         req.userId
       );
-      if (activeAppointment) {
+      if (activeAppointment.length > 3) {
         return res.status(400).json({
-          message: "You have an active appointment that is almost",
+          message: "You have three active appointments that is almost",
         });
       }
 
