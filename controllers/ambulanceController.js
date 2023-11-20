@@ -22,7 +22,6 @@ module.exports = {
         pickup_date,
         user_id,
       };
-
       const response = await ambulance.addAmbulanceRequestDetails(data);
 
       console.log(response);

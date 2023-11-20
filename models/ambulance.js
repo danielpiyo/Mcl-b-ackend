@@ -8,17 +8,19 @@ module.exports = {
  addAmbulanceRequestDetails: async (data) => {
     return new Promise((resolve, reject) => {
       const request_status = "Pending";
+	console.log(data);
       connAttrs.query(
         "INSERT INTO ambulance_requests (patient_id, request_type, pickup_location, destination_address, distance, patient_state, pickup_date, request_status) VALUES (?,?,?,?,?,?,?,?)",
         [
-          data.user_id,
-	  data.request_type,
+          data.user_id,	 
+           data.request_type, 
           data.pickup_location,
           data.destination_address,
           data.distance,
           data.patient_state,
           data.pickup_date,
-          request_status,
+          request_status
+         
         ],
         (err, result, fields) => { 
           if (err) {
@@ -133,30 +135,6 @@ addAmbulannce: async (data) => {
             return reject(err);
           }
           resolve(results);
-        }
-      );
-    });
-  },
-  addAmbulanceRequestDetails: async (data) => {
-    return new Promise((resolve, reject) => {
-      const request_status = "Pending";
-      connAttrs.query(
-        "INSERT INTO ambulance_requests (patient_id, pickup_location, destination_address, distance, patient_state, pickup_date, request_status) VALUES (?,?,?,?,?,?,?)",
-        [
-          data.user_id,
-          data.pickup_location,
-          data.destination_address,
-          data.distance,
-          data.patient_state,
-          data.pickup_date,
-          request_status,
-        ],
-        (err, result, fields) => {
-          if (err) {
-            console.log(err);
-            return reject(err);
-          }
-          resolve(result);
         }
       );
     });
