@@ -113,6 +113,21 @@ const appointmentUpdate = (data) => {
     );
   });
 };
+const adminCancelAppointment = (id) => {
+  return new Promise((resolve, reject) => {
+    connAttrs.query(
+      "UPDATE appointments SET is_delete = 1 WHERE id = ?",
+      [id],
+      (err, result) => {
+        if(err){
+          console.log(err);
+          reject(err);
+        }
+        resolve(result);
+      }
+    )
+  })
+}
 
 module.exports = {
   addNewAdmin,
@@ -122,4 +137,5 @@ module.exports = {
   getAdmins,
   closeTicket,
   appointmentUpdate,
+  adminCancelAppointment,
 };

@@ -94,6 +94,7 @@ const {
   getPatientByEmail,
   closeSupportTicket,
   updateAppointmentTime,
+  cancelAppointment,
 } = require("../controllers/adminController");
 const { verifyAdminToken } = require("../middlewares/adminAuthMiddleware");
 
@@ -178,6 +179,11 @@ router.post(
   "/update-appointment-date",
   // authMiddleware.verifyToken,
   updateAppointmentTime
+);
+router.post(
+  "/cancel-appointment",
+  // authMiddleware.verifyToken,
+  cancelAppointment
 );
 
 router.post(
