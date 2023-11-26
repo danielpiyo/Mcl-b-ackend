@@ -93,6 +93,7 @@ const {
   getDoctorByEmail,
   getPatientByEmail,
   closeSupportTicket,
+  updateAppointmentTime,
 } = require("../controllers/adminController");
 const { verifyAdminToken } = require("../middlewares/adminAuthMiddleware");
 
@@ -174,6 +175,12 @@ router.post(
 );
 
 router.post(
+  "/update-appointment-date",
+  // authMiddleware.verifyToken,
+  updateAppointmentTime
+);
+
+router.post(
   "/raiseTicket",
   authMiddleware.verifyToken,
   appointmentController.raiseTicket
@@ -184,7 +191,7 @@ router.post(
   "/allOpen-closedTicket",
   appointmentController.findOpenCloseTickets
 );
-router.post("/closeTicket", authMiddleware.verifyToken, closeSupportTicket )
+router.post("/closeTicket", authMiddleware.verifyToken, closeSupportTicket);
 
 // create new admin
 router.post("/admin/create-admin", handleAdminSignup);

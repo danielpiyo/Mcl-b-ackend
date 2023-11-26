@@ -98,6 +98,21 @@ const closeTicket = (data) => {
     );
   });
 };
+const appointmentUpdate = (data) => {
+  return new Promise((resolve, reject) => {
+    connAttrs.query(
+      "UPDATE appointments SET booking_date = ? WHERE id = ?",
+      [data.date, data.id],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        }
+        resolve(result);
+      }
+    );
+  });
+};
 
 module.exports = {
   addNewAdmin,
@@ -106,4 +121,5 @@ module.exports = {
   changeAdminPassword,
   getAdmins,
   closeTicket,
+  appointmentUpdate,
 };

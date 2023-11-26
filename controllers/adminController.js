@@ -8,6 +8,7 @@ const {
   changeAdminPassword,
   getAdmins,
   closeTicket,
+  appointmentUpdate,
 } = require("../models/admin");
 const { sendEmail } = require("../models/email");
 const { findDoctorByEmail } = require("../models/doctors");
@@ -244,6 +245,20 @@ const closeSupportTicket = async (req, res) => {
     return res.status(500).json({ message: "an error occurred" });
   }
 };
+const updateAppointmentTime = async (req, res) => {
+  const { appointment_id, new_date } = req.body;
+  const data = {
+    date: new_date,
+    id: appointment_id,
+  };
+  try {
+    const response = await appointmentUpdate(data);
+    if (!response) {
+      return res.status(404).json({ message: "Failed to change the date!" });
+    }
+    return res.status(200).json({ message: "Date updated succesfully" });
+  } catch (error) {}
+};
 module.exports = {
   handleAdminSignin,
   handleAdminSignup,
@@ -254,4 +269,5 @@ module.exports = {
   getDoctorByEmail,
   getPatientByEmail,
   closeSupportTicket,
+  updateAppointmentTime,
 };
