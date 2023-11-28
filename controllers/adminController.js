@@ -10,6 +10,7 @@ const {
   closeTicket,
   appointmentUpdate,
   adminCancelAppointment,
+  suspendUser,
 } = require("../models/admin");
 const { sendEmail } = require("../models/email");
 const { findDoctorByEmail } = require("../models/doctors");
@@ -276,6 +277,38 @@ const cancelAppointment = async (req, res) => {
     return res.status(500).json({ message: "an error occurred" });
   }
 };
+// suspend a user
+const handleSuspendUser = async (req, res) => {
+  const { user_id } = req.body;
+  const data = {
+    is_suspended: 1,
+    suspended_by: req.userId,
+    id: user_id,
+  };
+  console.log(data);
+  try {
+    const response = await suspendUser(data);
+    if (!response) {
+      return res.status(404).json({ message: "Failed to perform action!" });
+    }
+    return res.status(200).json({ message: "Suspended succesfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "an error occurred" });
+  }
+};
+
+// send email to medid after approval
+const sendApprovalEmail = (req,res) => {
+  const {email, name, speciality} =req.body;
+  try {
+    // send email to medic
+    
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "an error occurred" });
+  }
+}
 module.exports = {
   handleAdminSignin,
   handleAdminSignup,
@@ -288,4 +321,5 @@ module.exports = {
   closeSupportTicket,
   updateAppointmentTime,
   cancelAppointment,
+  handleSuspendUser,
 };

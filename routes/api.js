@@ -95,6 +95,7 @@ const {
   closeSupportTicket,
   updateAppointmentTime,
   cancelAppointment,
+  handleSuspendUser,
 } = require("../controllers/adminController");
 const { verifyAdminToken } = require("../middlewares/adminAuthMiddleware");
 
@@ -237,6 +238,7 @@ router.post(
   authMiddleware.verifyToken,
   appointmentController.getUserClosedAppointments
 );
+
 // Doctors Appointments
 router.post(
   "/doctorOpenAppointments",
@@ -342,6 +344,10 @@ router.put("/assignAmbulance", verifyAdminToken, assignRequestToAmbulance);
 
 router.post("/ambulance/rate", ambulanceReview);
 
+// suspend user
+router.post("/suspendUser", 
+// verifyAdminToken,
+ handleSuspendUser)
 //Mpesa payment
 router.post(
   "/payment/callback",
