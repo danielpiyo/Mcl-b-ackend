@@ -3,6 +3,7 @@ const Doctor = require("../models/doctors");
 const bcrypt = require("bcryptjs");
 const config = require("../config/config");
 const jwt = require("jsonwebtoken");
+const { sendApprovalEmail, sendRejectionEmail } = require("./adminController");
 
 
 module.exports = {
@@ -435,14 +436,20 @@ updateDoctorExperience: async (req, res) => {
   // approve or deny doctor application
 
   approveDoctorRequest: async (req, res) => {
-    const { doctor_id, verified_status} = req.body;
+    const { doctor_id, verified_status, email, speciality, name,reason} = req.body;
     console.log(req.body);
     // const verified = parseInt(verified_status)
 
     try {
       const response = await Doctor.updateDoctorVerifiedStatus(doctor_id, verified_status);
       console.log(response);
-      return res.status(200).json({message: "Doctor Application approved successfuly"})
+      if(verified_status === "Approved"){
+        await sendApprovalEmail(email, speciality, name)
+
+      }else{
+        await sendRejectionEmail(email, speciality, name, reason)
+      }
+      return res.status(200).json({message: "Doctor Application approved successfuly and email sent"})
     } catch (error) {
       console.error("Error occurred:", error);
       res.status(500).json({ error: true, message: "Internal Server Error" });
