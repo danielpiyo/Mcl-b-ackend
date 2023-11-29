@@ -93,6 +93,9 @@ const {
   getDoctorByEmail,
   getPatientByEmail,
   closeSupportTicket,
+  updateAppointmentTime,
+  cancelAppointment,
+  handleSuspendUser,
 } = require("../controllers/adminController");
 const { verifyAdminToken } = require("../middlewares/adminAuthMiddleware");
 
@@ -174,6 +177,17 @@ router.post(
 );
 
 router.post(
+  "/update-appointment-date",
+  // authMiddleware.verifyToken,
+  updateAppointmentTime
+);
+router.post(
+  "/cancel-appointment",
+  // authMiddleware.verifyToken,
+  cancelAppointment
+);
+
+router.post(
   "/raiseTicket",
   authMiddleware.verifyToken,
   appointmentController.raiseTicket
@@ -184,7 +198,7 @@ router.post(
   "/allOpen-closedTicket",
   appointmentController.findOpenCloseTickets
 );
-router.post("/closeTicket", authMiddleware.verifyToken, closeSupportTicket )
+router.post("/closeTicket", authMiddleware.verifyToken, closeSupportTicket);
 
 // create new admin
 router.post("/admin/create-admin", handleAdminSignup);
@@ -224,6 +238,7 @@ router.post(
   authMiddleware.verifyToken,
   appointmentController.getUserClosedAppointments
 );
+
 // Doctors Appointments
 router.post(
   "/doctorOpenAppointments",
@@ -329,6 +344,10 @@ router.put("/assignAmbulance", verifyAdminToken, assignRequestToAmbulance);
 
 router.post("/ambulance/rate", ambulanceReview);
 
+// suspend user
+router.post("/suspendUser", 
+// verifyAdminToken,
+ handleSuspendUser)
 //Mpesa payment
 router.post(
   "/payment/callback",

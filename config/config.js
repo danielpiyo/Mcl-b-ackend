@@ -8,4 +8,10 @@ module.exports = {
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
   },
+  // connection: {
+  //   host: "127.0.0.1",
+  //   user: "nixcraft",
+  //   password: "festus004",
+  //   database: "m_clinic",
+  // },
 };
