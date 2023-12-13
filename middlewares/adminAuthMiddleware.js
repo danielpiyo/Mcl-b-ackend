@@ -12,14 +12,14 @@ module.exports = {
         .json({ auth: false, message: "No token provided." });
     }
 
-    jwt.verify(token, config.jwtSecretKey, (err, decoded) => {
+    jwt.verify(token, config.jwtAdminSecret, (err, decoded) => {
       if (err) {
         return res
           .status(500)
           .json({ auth: false, message: "Your authentication token has Expired. Login again" });
       }
 
-      req.userId = decoded.entity_id;
+      req.userId = decoded.user_id;
       req.email = decoded.email;
       next();
     });

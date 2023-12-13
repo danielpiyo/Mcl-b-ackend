@@ -248,5 +248,16 @@ updateUserRegCode: async (req, res) => {
     }
   },
 
+  getAllPatients: async (req, res) => {
+    try {
+      const result = await User.getAllpatients();
+      console.log(`${req.email}, successfully pulled Patients on ${new Date()}`);
+      return res.status(202).json(result);
+    } catch (error) {
+      console.error("Error occurred:", error);
+      res.status(500).json({ error: true, message: "Internal Server Error" });
+    }
+  },
+
   // ...other controllers...
 };

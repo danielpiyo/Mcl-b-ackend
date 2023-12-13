@@ -18,7 +18,7 @@ module.exports = {
   },
 
   serviceById: async (req, res) => {
-    const id = req.params.id;
+    const {id} = req.body;
     try {
       const result = await Service.findServiceById(id);
       if (!result) {
@@ -28,7 +28,7 @@ module.exports = {
       }
 
       console.log(
-        `Service with id ${id}, successfully pulled on ${new Date()} ` 
+        `Service with id ${id}, successfully pulled on ${new Date()} by user ${req.email} ` 
       );
 
       return res.status(200).json(result);

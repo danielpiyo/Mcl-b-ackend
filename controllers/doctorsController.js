@@ -3,6 +3,7 @@ const Doctor = require("../models/doctors");
 const bcrypt = require("bcryptjs");
 const config = require("../config/config");
 const jwt = require("jsonwebtoken");
+const { sendApprovalEmail, sendRejectionEmail } = require("./adminController");
 
 
 module.exports = {
@@ -71,7 +72,7 @@ module.exports = {
 
 
   doctorById: async (req, res) => {
-    const id = req.params.id;
+    const {id} = req.body;
     try {
       const result = await Doctor.findDoctorById(id);
       if (!result) {
@@ -81,7 +82,7 @@ module.exports = {
       }
 
       console.log(
-        `Doctors with id ${id}, successfully pulled on ${new Date()} `
+        `Doctors with id ${id}, successfully pulled on ${new Date()} by user ${req.email}`
       );
 
       return res.status(200).json(result);
@@ -435,19 +436,25 @@ updateDoctorExperience: async (req, res) => {
   // approve or deny doctor application
 
   approveDoctorRequest: async (req, res) => {
-    const { doctor_id, verified_status} = req.body;
+    const { doctor_id, verified_status, email, speciality, name,reason} = req.body;
     console.log(req.body);
     // const verified = parseInt(verified_status)
 
     try {
       const response = await Doctor.updateDoctorVerifiedStatus(doctor_id, verified_status);
       console.log(response);
-      return res.status(200).json({message: "Doctor Application approved successfuly"})
+      if(verified_status === "Approved"){
+        await sendApprovalEmail(email, name, speciality)  
+
+      }else{
+        await sendRejectionEmail(email, name, speciality, reason)
+      }
+      return res.status(200).json({message: "Doctor Application approved successfuly and email sent"})
     } catch (error) {
-      console.error("Error occurred:", error);
-      res.status(500).json({ error: true, message: "Internal Server Error" });
-    }
-  },
+      console.error("Error occurred:", error); 
+      res.status(500).json({ error: true, message: "Internal Server Error"});
+}
+},
 
 // All withdrawal Request
  pullAllWithdrawalsRequest: async (req, res) => {    

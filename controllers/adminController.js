@@ -8,6 +8,9 @@ const {
   changeAdminPassword,
   getAdmins,
   closeTicket,
+ appointmentUpdate,
+  adminCancelAppointment,
+  suspendUser,
 } = require("../models/admin");
 const { sendEmail } = require("../models/email");
 const { findDoctorByEmail } = require("../models/doctors");
@@ -244,6 +247,102 @@ const closeSupportTicket = async (req, res) => {
     return res.status(500).json({ message: "an error occurred" });
   }
 };
+
+const updateAppointmentTime = async (req, res) => {
+  const { appointment_id, new_date } = req.body;
+  const data = {
+    date: new_date,
+    id: appointment_id,
+  };
+  try {
+    const response = await appointmentUpdate(data);
+      return res.status(201).json({ message: "Appointment Rescheduled succesfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "an error occurred" });
+  }
+};
+const cancelAppointment = async (req, res) => {
+  const { appointment_id } = req.body;
+  try {
+    const response = await adminCancelAppointment(appointment_id);
+    return res.status(201).json({ message: "Appointment Cancelled succesfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "an error occurred" });
+  }
+};
+// suspend a user
+const handleSuspendUser = async (req, res) => {
+  const { user_id, token } = req.body;
+  const data = {
+    is_suspended: 1,
+    suspended_by: req.userId,
+    id: user_id,
+    // token: token
+  };
+  // console.log(data);
+  try {
+    const response = await suspendUser(data);
+    return res.status(201).json({ message: "Suspended succesfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "an error occurred" });
+  }
+};
+
+// send email to medic after approval
+const sendApprovalEmail = async (email, name, speciality) => {
+  try {
+    // send email to medic
+    const subject = "Welcome to MCLINIC: Acceptance of Application";
+    const content = `Dear ${name},
+
+    I hope this message finds you well. I am writing to extend my heartfelt congratulations on behalf of the MCLINIC team for your successful application acceptance! Your dedication and expertise as a ${speciality} stood out among the numerous applications we received.
+    
+    Your contribution to our platform will undoubtedly enrich the healthcare experience for our users. At MCLINIC, we are committed to providing a seamless and innovative healthcare platform, and we believe that your valuable skills and experience will significantly enhance our service.
+    
+    As an esteemed member of our team, you will have the opportunity to engage with a diverse range of patients, providing high-quality care and making a meaningful impact on their lives. Your proficiency and dedication in your field will undoubtedly elevate the standard of healthcare services offered through our app.
+    
+    We are thrilled to have you join us on this journey toward improving healthcare accessibility and quality through technology. Our team is here to support you every step of the way as you embark on this exciting chapter with MCLINIC.
+    
+    To initiate the onboarding process, our team will be in touch shortly to answer any queries you might have.
+    
+    Once again, congratulations on becoming a part of MCLINIC. We eagerly anticipate the positive impact your expertise will bring to our platform.
+    
+    `;
+    await sendEmail(email, subject, content);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "an error occurred" });
+  }
+};
+// send rejection email
+const sendRejectionEmail = async (email,name, speciality, reason) => {
+  try {
+    const subject = "Application Status - MCLINIC";
+    const content = `Dear ${name},
+
+    I hope this message finds you well. I want to express our sincere appreciation for your interest in joining MCLINIC and for taking the time to apply as a ${speciality}.
+    
+    After careful consideration and review of all applications received, we regret to inform you that we have chosen another candidate whose qualifications more closely align with our current requirements for the position.
+
+    ${reason}
+    
+    Please know that the decision-making process was challenging, given the high caliber of applicants we had for this role. We truly value the expertise and dedication you have demonstrated in your field.
+    
+    We encourage you to keep an eye on future opportunities with MCLINIC, as new positions may become available that match your skill set and experience. Your interest in contributing to our platform is highly appreciated, and we would welcome your application in the future.
+    
+    Thank you again for your interest in joining our team. We wish you all the best in your future endeavors and continued success in your career.
+    
+    `
+    await sendEmail(email, subject, content);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "an error occurred" });
+  }
+};
+
 module.exports = {
   handleAdminSignin,
   handleAdminSignup,
@@ -254,4 +353,9 @@ module.exports = {
   getDoctorByEmail,
   getPatientByEmail,
   closeSupportTicket,
+  updateAppointmentTime,
+  cancelAppointment,
+  handleSuspendUser,
+  sendApprovalEmail,
+  sendRejectionEmail,
 };

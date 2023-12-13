@@ -13,6 +13,28 @@ const pool = mysql.createPool({
 });
 
 module.exports = {
+getAllpatients: async (email) => {
+    return new Promise((resolve, reject) => {
+      pool.getConnection((err, connection) => {
+        if (err) {
+          return reject(err);
+        }
+
+        connection.query(
+          "SELECT * FROM users ORDER BY id DESC",
+          email,
+          (error, result) => {
+            connection.release();
+
+            if (error) {
+              return reject(error);
+            }
+            resolve(result);
+          }
+        );
+      });
+    });
+  },
   findUserByEmail: async (email) => {
     return new Promise((resolve, reject) => {
       pool.getConnection((err, connection) => {

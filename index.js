@@ -55,6 +55,6 @@ server.on('error', (error) => {
     console.error('Error starting server:', error.message);
 });
 
-app.listen(port, () => {
-    console.log(`Mclinic API listens on port: ${port}`);
+server.listen(port, () => {
+    console.log(`Mclinic API listens on port:${port}`);
 });

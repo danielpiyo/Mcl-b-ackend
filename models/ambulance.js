@@ -160,7 +160,7 @@ addAmbulannce: async (data) => {
       connAttrs.query(
         "SELECT request_id, pickup_location, destination_address, distance, pickup_date, patient_state, request_datetime, request_status FROM ambulance_requests WHERE patient_id = ?",
         [user_id],
-        (err, results, fields) => {
+        (err, results) => {
           if (err) {
             console.log(err);
             reject(err);
@@ -172,11 +172,11 @@ addAmbulannce: async (data) => {
   },
   getPendingRequest: async (status) => {
     return new Promise((resolve, reject) => {
-      const request_status = status;
+      // const request_status = status;
       connAttrs.query(
-        "SELECT * FROM ambulance_requests WHERE request_type='Medical Evaquation' and request_status = ?",
-        [status],
-        (err, results, fields) => {
+        "SELECT * FROM ambulance_requests WHERE request_type='Medical Evacuation' and request_status = ? ORDER BY request_id DESC",
+        status,
+        (err, results) => {
           if (err) {
             console.log(err);
             return reject(err);

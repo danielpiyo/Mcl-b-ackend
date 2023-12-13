@@ -99,6 +99,53 @@ const closeTicket = (data) => {
   });
 };
 
+const appointmentUpdate = (data) => {
+  return new Promise((resolve, reject) => {
+    connAttrs.query(
+      "UPDATE appointments SET booking_date = ? WHERE id = ?",
+      [data.date, data.id],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        }
+        resolve(result);
+      }
+    );
+  });
+};
+const adminCancelAppointment = (id) => {
+  return new Promise((resolve, reject) => {
+    connAttrs.query(
+      "UPDATE appointments SET is_delete = 1 WHERE id = ?",
+      [id],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        }
+        resolve(result);
+      }
+    );
+  });
+};
+// suspend a user
+const suspendUser = (data) => {
+  return new Promise((resolve, reject) => {
+    connAttrs.query(
+      "UPDATE users SET is_suspended = ? , suspended_by = ? WHERE id = ?",
+      [data.is_suspended, data.suspended_by, data.id],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        }
+        resolve(result);
+      }
+    );
+  });
+};
+
 module.exports = {
   addNewAdmin,
   loginAdmin,
@@ -106,4 +153,7 @@ module.exports = {
   changeAdminPassword,
   getAdmins,
   closeTicket,
+  appointmentUpdate,
+  adminCancelAppointment,
+  suspendUser,
 };
